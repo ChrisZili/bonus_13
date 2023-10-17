@@ -41,7 +41,67 @@ extern "C" {
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
 #endif /* USE_FULL_ASSERT */
+#define LED_Pin LL_GPIO_PIN_3
+#define LED_GPIO_Port GPIOB
+#ifndef NVIC_PRIORITYGROUP_0
+#define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
+                                                                 4 bits for subpriority */
+#define NVIC_PRIORITYGROUP_1         ((uint32_t)0x00000006) /*!< 1 bit  for pre-emption priority,
+                                                                 3 bits for subpriority */
+#define NVIC_PRIORITYGROUP_2         ((uint32_t)0x00000005) /*!< 2 bits for pre-emption priority,
+                                                                 2 bits for subpriority */
+#define NVIC_PRIORITYGROUP_3         ((uint32_t)0x00000004) /*!< 3 bits for pre-emption priority,
+                                                                 1 bit  for subpriority */
+#define NVIC_PRIORITYGROUP_4         ((uint32_t)0x00000003) /*!< 4 bits for pre-emption priority,
+                                                                 0 bit  for subpriority */
+#endif
+/*Enables clock for GPIO port B*/
+#define CLOCK_ENABLE			*((volatile uint32_t *) (uint32_t)(0x40021000 + 0x00000014U)) |= (uint32_t)(1 << 18);
+#define	GPIOA_BASE_ADDR			(uint32_t)(0x48000000U)
 
+//GPIOB peripheral base address
+#define	GPIOB_BASE_ADDR			(uint32_t)(0x48000400U)
+//MODER register
+#define	GPIOB_MODER_REG			*((volatile uint32_t*) ((uint32_t)GPIOB_BASE_ADDR)) &= ~(uint32_t) (0x3 << 6);
+//Set mode for pin 3
+#define GPIOB_PIN_3				*((volatile uint32_t*) ((uint32_t) GPIOB_BASE_ADDR)) |= (uint32_t) (1 << 6);
+//OTYPER register
+#define	GPIOB_OTYPER_REG		*((volatile uint32_t*) ((uint32_t) (GPIOB_BASE_ADDR + 0x04U))) &= ~(1 << 3);
+//OSPEEDER register
+#define GPIOB_OSPEEDER_REG		*((volatile uint32_t*) ((uint32_t) (GPIOB_BASE_ADDR + 0x08U))) &= ~(0x3 << 6);
+//PUPDR register
+#define GPIOB_PUPDR_REG			*((volatile uint32_t*) ((uint32_t) (GPIOB_BASE_ADDR + 0x0CU))) |= (1 << 12);
+//IDR register
+#define GPIOB_NO_PULL           *((volatile uint32_t*) ((uint32_t) (GPIOB_BASE_ADDR + 0x0CU))) &= ~(0x3 << 6);
+
+#define GPIOB_IDR_REG			*(uint32_t *)(GPIOB_BASE_ADDR + 0x10U)
+//ODR register
+#define GPIOB_ODR_REG			*(uint32_t *)(GPIOB_BASE_ADDR + 0x14U)
+//BSRR register
+#define GPIOB_BSRR_REG			*(uint32_t *)(GPIOB_BASE_ADDR + 0x18U)
+//BRR register
+#define GPIOB_BRR_REG			*(uint32_t *)(GPIOB_BASE_ADDR + 0x28U)
+
+
+
+//RCC base address
+#define	RCC_BASE_ADDR			(uint32_t)(0x40021000U)
+//AHBEN register
+#define	RCC_AHBENR_REG			*((volatile uint32_t *) (uint32_t)(RCC_BASE_ADDR + 0x00000014U))
+#define LED_ON					*((volatile uint32_t *)((uint32_t)(0x48000400 + 0x18U))) |= (1 << 3)	//GPIOB pin 3
+#define LED_OFF					*((volatile uint32_t *)((uint32_t)0x48000400 + 0x28U)) |= (1 << 3)	//GPIOB pin 3
+
+#define BUTTON (*((volatile uint32_t *)((uint32_t)(0x48000400 + 0x10U))) & (1 << 6))
+
+typedef enum EDGE_TYPE EDGE_TYPE;
+
+enum EDGE_TYPE{
+	NONE=0,
+	RISE=1,
+	FALL=2
+};
+
+EDGE_TYPE edgeDetect(uint8_t pin_state, uint8_t samples);
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
