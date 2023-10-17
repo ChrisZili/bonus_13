@@ -1,7 +1,7 @@
 # Riešitelia
-1. meno1
-2. meno2
-3. meno3
+1. Christian Žiličár
+2. Samuel Mrekaj
+3. Lukáš Matejov
 
 # Bonusová úloha VRS (4b za 30min)
 S použitím GitHub nástrojov vytvoríte rovnaký program ako v zadaní 1. Zadanie pozostáva zo 4 častí, za každú môžete dostať 1 bod pre tím, ktoré si môžete ľubovoľne prerozdeliť vrámci tímu.
